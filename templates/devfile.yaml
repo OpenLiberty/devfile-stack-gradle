@@ -13,7 +13,7 @@ starterProjects:
 components:
   - name: devruntime
     container:
-        # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/application-stack
+      # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/application-stack
       image: {{.STACK_IMAGE}}
       memoryLimit: 1512Mi
       mountSources: true
@@ -31,13 +31,13 @@ commands:
                    then
                        echo "found the disable file" && echo "devBuild command will not run" && exit 0;
                    else
-                       echo "will run the devBuild command" && mkdir -p /projects/target/liberty
-                                                            && if [ ! -d /projects/target/liberty/wlp ];
-                                                                 then echo "...moving liberty"; mv /opt/ol/wlp /projects/target/liberty; touch ./.liberty-mv;
-                                                               elif [[ -d /projects/target/liberty/wlp && ! -e /projects/.liberty-mv ]];
+                       echo "will run the devBuild command" && mkdir -p /projects/build
+                                                            && if [ ! -d /projects/build/wlp ];
+                                                                 then echo "...moving liberty"; mv /opt/ol/wlp /projects/build; touch ./.liberty-mv;
+                                                               elif [[ -d /projects/build/wlp && ! -e /projects/.liberty-mv ]];
                                                                  then echo "STACK WARNING - LIBERTY RUNTIME WAS LOADED FROM HOST";
-                                                               fi
-                                                            && mvn -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} package
+                                                                 fi
+                                                            && gradle -g /.gradle assemble -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}}
                                                             && touch ./.disable-bld-cmd;
                    fi
       workingDir: /projects
@@ -48,7 +48,7 @@ commands:
   - id: run
     exec:
       component: devruntime 
-      commandLine: mvn -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} -Ddebug=false -DhotTests=true -DcompileWait=3 liberty:dev
+      commandLine: gradle -g /.gradle libertyDev -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} --libertyDebug=false --hotTests --compileWait=3
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -57,7 +57,7 @@ commands:
   - id: run-test-off
     exec:
       component: devruntime
-      commandLine: mvn -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} -Ddebug=false liberty:dev
+      commandLine: gradle -g /.gradle libertyDev -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} --libertyDebug=false
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -65,18 +65,17 @@ commands:
         isDefault: false
   - id: debug
     exec:
-      component: devruntime 
-      commandLine: mvn -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} -DdebugPort=${DEBUG_PORT} liberty:dev -Dliberty.env.WLP_DEBUG_REMOTE=y
+      component: devruntime
+      commandLine: gradle -g /.gradle libertyDev -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} --libertyDebugPort=${DEBUG_PORT} -Pliberty.server.env.WLP_DEBUG_REMOTE=y
       workingDir: /projects
       hotReloadCapable: true
       group:
         kind: debug
         isDefault: true
   - id: test
-    # The 'test' command requires an active container, so we don't need to specify the liberty runtime version
     exec:
       component: devruntime 
-      commandLine: mvn -Dmicroshed_hostname=localhost -Dmicroshed_http_port=9080 -Dmicroshed_manual_env=true -Dmicroshed_app_context_root=/ failsafe:integration-test failsafe:verify
+      commandLine: gradle -g /.gradle test -Dmicroshed_hostname=localhost -Dmicroshed_http_port=9080 -Dmicroshed_manual_env=true -Dmicroshed_app_context_root=/ -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}}
       workingDir: /projects
       hotReloadCapable: true
       group:

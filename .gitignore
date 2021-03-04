@@ -1,5 +1,3 @@
-target/
-
 # generated from stack build.sh, not source
 generated/
 
@@ -25,15 +23,13 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
 release.properties
-dependency-reduced-pom.xml
 buildNumber.properties
-.mvn/timing.properties
-# https://github.com/takari/maven-wrapper#usage-without-binary-jar
-.mvn/wrapper/maven-wrapper.jar
+
 .odo/odo-file-index.json
 **/.DS_Store
+.vscode
+
+# Gradle
+.gradle
+build/
