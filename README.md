@@ -27,72 +27,16 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 **Note:** Gradle is provided by the stack, allowing you to build, test, and debug your Java application without installing Gradle locally.
 
-## Getting Started With the Intro Sample
-
-> It's recommended to use the latest version of OpenShift Do (odo). You can install odo using [these instructions](https://odo.dev/docs/installing-odo/)
-
-1. Perform an `oc login` to your cluster.
-
-1. Clone the application-stack-intro repository
-
-    ```shell
-    git clone git@github.com:OpenLiberty/application-stack-intro.git
-    cd application-stack-intro
-    ```
-
-1. Create your odo component
-
-    ```shell
-    odo create my-component
-    ```
-
-1. Push the sample application to OpenShift
-
-    ```shell
-    odo push
-    ```
-1. Wait for tests to complete
-
-    ```shell
-    odo log -f
-    ```
-
-1. Retrieve the URL for your app deployed to OpenShift
-
-    ```shell
-    odo url list
-    ```
-
-    This URL will show the intro app's welcome page by default.  
-
-   Click the link:  *Try your new Microservice "here"* to invoke the JAX-RS resource within (or invoke the URL at `<endpoint>/api/resource` to do so directly).
-
-1. If you wish to continue and make changes to your local project, you can start odo watch
-
-    ```shell
-    odo watch
-    ```
-
-You can now begin developing your app (in another shell or editor)! Changes will be detected and pushed automatically.
 
 ## Further Reading
-
-### Creating a new stack project
-
-To use the starter to create new projects, see: https://github.com/OpenLiberty/application-stack/wiki/Using-the-Default-Starter
-
-### User Doc
-
-Checkout the application-stack [wiki](https://github.com/OpenLiberty/application-stack/wiki) for details on using the Open Liberty stack.
 
 ### odo.dev
 
  follow the guides from the [odo.dev](https://odo.dev) site.
 
-
 ## Contributing
 
-Our [CONTRIBUTING](https://github.com/OpenLiberty/application-stack/blob/master/CONTRIBUTING.md) document contains details for submitting pull requests.
+Our [CONTRIBUTING](https://github.com/OpenLiberty/application-stack-gradle/blob/main/CONTRIBUTING.md) document contains details for submitting pull requests.
 
 ## License
 

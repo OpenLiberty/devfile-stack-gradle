@@ -1,8 +1,21 @@
+# Copyright (c) 2021 IBM Corporation and others
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 schemaVersion: 2.0.0
 metadata:
-  name: java-openliberty
-  version: 0.4.1
-  description: Java application stack using Open Liberty runtime
+  name: java-openliberty-gradle
+  version: 0.0.1
+  description: Java application Gradle built stack using the Open Liberty runtime
   alpha.build-dockerfile: "{{.DEVFILE_DOCKERFILE_LOC}}"
   alpha.deployment-manifest: "{{.DEVFILE_DEPLOY_YAML_LOC}}"
 starterProjects:
@@ -13,7 +26,6 @@ starterProjects:
 components:
   - name: devruntime
     container:
-      # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/application-stack
       image: {{.STACK_IMAGE}}
       memoryLimit: 1512Mi
       mountSources: true
@@ -75,7 +87,7 @@ commands:
   - id: test
     exec:
       component: devruntime 
-      commandLine: gradle -g /.gradle test -Dmicroshed_hostname=localhost -Dmicroshed_http_port=9080 -Dmicroshed_manual_env=true -Dmicroshed_app_context_root=/ -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}}
+      commandLine: gradle -g /.gradle test -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}}
       workingDir: /projects
       hotReloadCapable: true
       group:

@@ -2,17 +2,17 @@
 
 buildStackImage() {
 
-    echo "> Building Stack Image";
+    echo "> Building Gradle Stack Image";
     
-    stackImage=$(cat generated/devfile.yaml | grep "openliberty/application-stack:")
+    stackImage=$(cat generated/devfile.yaml | grep "openliberty/application-stack-gradle:")
     stackImageVersion=$(echo ${stackImage##*:})
-    echo "Using \"openliberty/application-stack:$stackImageVersion\" as tag name"
-    docker build -t openliberty/application-stack:$stackImageVersion --build-arg stacklabel=$SHA -f generated/stackimage-Dockerfile stackimage
+    echo "Using \"openliberty/application-stack-gradle:$stackImageVersion\" as tag name"
+    docker build -t openliberty/application-stack-gradle:$stackImageVersion --build-arg stacklabel=$SHA -f generated/stackimage-Dockerfile stackimage
 }
 
 buildStack() {
 
-    echo "> Building Stack";
+    echo "> Building Gradle Stack";
     
     ./build.sh
     ls -al generated
