@@ -1,0 +1,35 @@
+# generated from stack build.sh, not source
+generated/
+
+# eclipse specific git ignore
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+release.properties
+buildNumber.properties
+
+.odo/odo-file-index.json
+**/.DS_Store
+.vscode
+
+# Gradle
+.gradle
+build/
