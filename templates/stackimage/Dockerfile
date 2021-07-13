@@ -32,6 +32,7 @@ ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.
 
 RUN mkdir -p /stacks/java-openliberty/priming-app \
   && mkdir -p /stacks/java-openliberty/config \
+  && mkdir -p /stacks/java-openliberty/scripts \
   && chown -R java_user /stacks \
   && mkdir -p /output \
   && chown -R java_user /output \
@@ -42,6 +43,7 @@ COPY ./LICENSE /licenses/
 USER java_user
 
 COPY ./config /stacks/java-openliberty/config
+COPY ./scripts /stacks/java-openliberty/scripts
 COPY ./priming-app/src /stacks/java-openliberty/priming-app/src
 COPY ./priming-app/build.gradle ./priming-app/settings.gradle /stacks/java-openliberty/priming-app/
 
@@ -57,6 +59,10 @@ RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; gradle libertyDev -Dliberty.runtim
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo
 
+# TODO: Cache dependencies associated with the previous major version of the microprofile APIs and OL microprofile features.
+# RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-{{.OL_MP_FEATURE_PREV_VERSION}}:${LIBERTY_RUNTIME_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
+#    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=org.eclipse.microprofile:microprofile:{{.ECLIPSE_MP_API_PREV_VERSION}}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
+
 # Delete the defaultServer directory created during libertyDev task execution. Users will customize their own. 
 RUN rm -rf /stacks/java-openliberty/priming-app/build/wlp/usr/servers/defaultServer
 
@@ -68,12 +74,14 @@ ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.
 RUN mkdir -p /output \
   && chown -R java_user /output \
   && chmod 775 /output \
-  && mkdir -p /opt/ol/wlp \
+  && mkdir -p /opt/ol \
   && chown -R java_user /opt/ol \
-  && chmod 775 /opt/ol /opt/ol/wlp \
+  && chmod 775 /opt/ol /opt/ol \
   && mkdir -p /work/outer-loop-app \
   && chown -R java_user /work \
   && chmod -R 775 /work \
+  && mkdir -p /stack/ol/scripts \
+  && chmod -R 775 /stack/ol/scripts \
   && mkdir -p /stack/ol/config/configDropins/defaults \
   && chmod -R 775 /stack/ol/config/configDropins/defaults
 
@@ -83,7 +91,11 @@ COPY --chown=1001:0 --from=builder /home/java_user/.gradle /.gradle
 RUN  rm -rf /.gradle/daemon; chmod -R 775 /.gradle
 
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/config/configDropins/defaults/ /stack/ol/config/configDropins/defaults/
-COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/build/wlp /opt/ol/wlp
+
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/scripts /stack/ol/scripts
+RUN chmod -R 755 /stack/ol/scripts
+
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/build/wlp /opt/ol
 COPY --chown=1001:0 ./LICENSE /licenses/
 
 USER java_user

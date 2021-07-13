@@ -63,4 +63,4 @@ If this occurs, the tests will need to be rerun.
 
 ## Future Tests
 
-1. Validate version changes in build.sh to make sure proper incrementation (i.e. you changed the outerloop Dockerfile but didnt increment the outerloop version)
+1. Validate version changes in build.sh to make sure proper incrementation (i.e. you changed the outerloop Dockerfile but did not increment the outerloop version)
