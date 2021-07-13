@@ -27,7 +27,6 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 **Note:** Gradle is provided by the stack, allowing you to build, test, and debug your Java application without installing Gradle locally.
 
-
 ## Further Reading
 
 ### odo.dev

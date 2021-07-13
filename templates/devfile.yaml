@@ -1,7 +1,10 @@
 # Copyright (c) 2021 IBM Corporation and others
 #
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -39,19 +42,7 @@ commands:
   - id: build
     exec:  
       component: devruntime 
-      commandLine: if [ -e /projects/.disable-bld-cmd ];
-                   then
-                       echo "found the disable file" && echo "devBuild command will not run" && exit 0;
-                   else
-                       echo "will run the devBuild command" && mkdir -p /projects/build
-                                                            && if [ ! -d /projects/build/wlp ];
-                                                                 then echo "...moving liberty"; mv /opt/ol/wlp /projects/build; touch ./.liberty-mv;
-                                                               elif [[ -d /projects/build/wlp && ! -e /projects/.liberty-mv ]];
-                                                                 then echo "STACK WARNING - LIBERTY RUNTIME WAS LOADED FROM HOST";
-                                                                 fi
-                                                            && gradle -g /.gradle assemble -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}}
-                                                            && touch ./.disable-bld-cmd;
-                   fi
+      commandLine: /stack/ol/scripts/devbuild-cmd.sh {{.OL_RUNTIME_VERSION}}
       workingDir: /projects
       hotReloadCapable: true
       group:
